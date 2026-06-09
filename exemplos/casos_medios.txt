@@ -1,0 +1,6 @@
+# Casos medios para o 8-Puzzle
+# Cada linha representa um estado inicial. O numero 0 representa o espaco vazio.
+
+1 2 3 5 0 6 4 7 8
+1 3 6 5 2 0 4 7 8
+1 3 6 5 0 2 4 7 8
