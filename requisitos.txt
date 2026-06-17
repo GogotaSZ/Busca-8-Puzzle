@@ -1,0 +1,2 @@
+# Dependencias obrigatorias serao adicionadas conforme a evolucao do projeto.
+# Por enquanto, a estrutura inicial usa apenas a biblioteca padrao do Python.
