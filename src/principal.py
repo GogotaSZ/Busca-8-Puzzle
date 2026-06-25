@@ -5,7 +5,7 @@ Este arquivo deve concentrar apenas a inicializacao do programa e delegar
 a interacao com o usuario para o modulo de interface.
 """
 
-from interface.linha_comando import executar_linha_comando
+from interface.linha_comando import menu_principal
 
 
 def principal():
@@ -18,7 +18,7 @@ def principal():
     - Permitir escolha da heuristica quando o algoritmo exigir.
     - Exibir o caminho da solucao e as metricas da execucao.
     """
-    executar_linha_comando()
+    menu_principal()
 
 
 if __name__ == "__main__":
