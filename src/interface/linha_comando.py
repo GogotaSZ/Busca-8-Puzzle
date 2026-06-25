@@ -1,4 +1,5 @@
 import os
+from utilitarios import verificar_solubilidade, ler_estado_de_texto
 
 def imprimir_matriz(estado):
     """Formata e imprime a lista de 9 posições como uma matriz 3x3."""
@@ -133,12 +134,28 @@ def menu_principal():
         elif opcao == '2':
             entrada = input("\nDigite os 9 números separados por espaço (Use 0 para vazio): ")
             try:
-                estado_inicial = [int(x) for x in entrada.split()]
-                if len(estado_inicial) != 9:
-                    print("\n[Erro] Você deve inserir exatamente 9 números.")
-                    estado_inicial = None
-            except ValueError:
-                print("\n[Erro] Insira apenas números.")
+                # Usa a nossa função utilitária que já valida tudo!
+                # Se der erro, ela "grita" e o 'except' abaixo captura.
+                estado_inicial = ler_estado_de_texto(entrada)
+                # Converte a tupla de volta para lista, pois alguns algoritmos podem preferir
+                estado_inicial = list(estado_inicial) 
+            except ValueError as erro:
+                # Aqui o terminal imprime exatamente a mensagem que configuramos no utilitarios.py
+                print(f"\n{erro}") 
+                estado_inicial = None
+                
+        # --- BLOCO DE VALIDAÇÃO DE SOLUBILIDADE ---
+        if estado_inicial:
+            # Verifica se matematicamente tem solução antes de chamar o menu de algoritmos
+            if verificar_solubilidade(estado_inicial):
+                menu_algoritmos(estado_inicial)
+            else:
+                print("\n" + "!"*50)
+                print("[AVISO] CONFIGURAÇÃO SEM SOLUÇÃO!")
+                print("!"*50)
+                print("O programa detectou que este estado inicial não possui")
+                print("solução matemática (número ímpar de inversões).")
+                print("Por favor, tente outra configuração.")
                 
         if estado_inicial:
             menu_algoritmos(estado_inicial)
