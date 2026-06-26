@@ -5,35 +5,77 @@ Este modulo sera responsavel por listar todos os movimentos validos a partir
 de um estado atual.
 """
 
+from estado_puzzle import EstadoPuzzle
 
 MOVIMENTOS = {
-    "cima": -3,
-    "baixo": 3,
-    "esquerda": -1,
-    "direita": 1,
+    "Cima": -3,
+    "Baixo": 3,
+    "Esquerda": -1,
+    "Direita": 1,
 }
 
+def movimento_valido(posicao_vazio, movimento):
+    """
+    Verifica se um movimento pode ser aplicado ao espaco vazio no grid 3x3 (1D).
+    """
+    if movimento == "Cima" and posicao_vazio < 3:
+        return False
+    if movimento == "Baixo" and posicao_vazio > 5:
+        return False
+    if movimento == "Esquerda" and posicao_vazio % 3 == 0:
+        return False
+    if movimento == "Direita" and posicao_vazio % 3 == 2:
+        return False
+    
+    return True
 
 def gerar_sucessores(estado_atual):
     """
     Gera os estados sucessores validos para o estado atual.
-
-    TODO:
-    - Localizar a posicao do espaco vazio.
-    - Verificar quais movimentos sao validos.
-    - Criar novos objetos EstadoPuzzle para cada movimento.
-    - Registrar o movimento realizado em cada sucessor.
-    - Incrementar custo e profundidade.
     """
-    pass
+    sucessores = []
+    valores = estado_atual.valores
+    
+    # Localiza a posicao do espaco vazio (o zero)
+    posicao_vazio = valores.index(0)
 
+    for nome_movimento, delta in MOVIMENTOS.items():
+        if movimento_valido(posicao_vazio, nome_movimento):
+            # Calcula o indice de destino da peca que vai ser movida
+            nova_posicao = posicao_vazio + delta
+            
+            # Transforma a tupla em lista temporariamente para fazer a troca (swap)
+            novos_valores = list(valores)
+            novos_valores[posicao_vazio], novos_valores[nova_posicao] = novos_valores[nova_posicao], novos_valores[posicao_vazio]
+            
+            # Instancia o novo objeto usando nossa classe padronizada
+            novo_estado = EstadoPuzzle(
+                valores=novos_valores,
+                anterior=estado_atual,
+                movimento=nome_movimento,
+                custo_g=estado_atual.custo_g + 1
+            )
+            
+            sucessores.append(novo_estado)
 
-def movimento_valido(posicao_vazio, movimento):
-    """
-    Verifica se um movimento pode ser aplicado ao espaco vazio.
+    return sucessores
 
-    TODO:
-    - Impedir movimentos para fora do tabuleiro.
-    - Tratar corretamente as bordas esquerda e direita.
-    """
-    pass
+"""
+
+    # Bloco de teste rápido (pode apagar depois de testar)
+if __name__ == "__main__":
+    print("Testando o motor do jogo...")
+    # Um estado com o espaço vazio (0) bem no meio do tabuleiro
+    estado_teste = EstadoPuzzle([1, 2, 3, 4, 0, 5, 6, 7, 8])
+    
+    print("\nEstado Atual:")
+    print(estado_teste.formatar())
+    
+    filhos = gerar_sucessores(estado_teste)
+    print(f"\nForam gerados {len(filhos)} sucessores válidos:\n")
+    
+    for filho in filhos:
+        print(f"Ação: {filho.movimento} | Custo G: {filho.custo_g}")
+        print(filho.formatar())
+        print("-" * 15)
+"""
