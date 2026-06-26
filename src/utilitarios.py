@@ -4,7 +4,10 @@ Funcoes utilitarias compartilhadas pelo projeto.
 
 def reconstruir_caminho(estado_final):
     """
-    Reconstrói o caminho da solução a partir do estado final.
+    Reconstrui o caminho da solucao a partir do estado final.
+
+    Aceita tanto a representacao antiga (``pai``, ``acao`` e ``estado``)
+    quanto ``EstadoPuzzle`` (``anterior``, ``movimento`` e o proprio no).
     """
     caminho = []
     no_atual = estado_final

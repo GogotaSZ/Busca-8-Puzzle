@@ -1,5 +1,8 @@
 import os, time
 from utilitarios import verificar_solubilidade, ler_estado_de_texto, reconstruir_caminho
+from algoritmos.busca_custo_uniforme import buscar as busca_custo_uniforme
+from algoritmos.busca_gulosa import buscar as busca_gulosa
+from estado_puzzle import EstadoPuzzle
 from algoritmos.busca_a_estrela import busca_a_estrela
 from algoritmos.busca_profundidade import buscar as busca_profundidade
 
@@ -112,11 +115,22 @@ def menu_algoritmos(estado_inicial):
                 metricas['nos_gerados'],
             )
             break
-        elif opcao in ['2', '4', '5']:
-            print(f"\n[Sistema] Iniciando execução do algoritmo {opcao}...")
-            # Aqui no futuro vamos chamar a função correspondente da pasta src/algoritmos/
-            # Ex: resultados = busca_largura(estado_inicial)
-            # exibir_resultados(resultados)
+        elif opcao == '4':
+            print("\n[Sistema] Iniciando Busca de Custo Uniforme...")
+            no_final, nos_visitados, nos_gerados, tempo_execucao = busca_custo_uniforme(
+                EstadoPuzzle(estado_inicial),
+                EstadoPuzzle(ESTADO_OBJETIVO),
+            )
+            exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados)
+        elif opcao == '5':
+            print("\n[Sistema] Iniciando Busca Gulosa com Distancia de Manhattan...")
+            no_final, nos_visitados, nos_gerados, tempo_execucao = busca_gulosa(
+                EstadoPuzzle(estado_inicial),
+                EstadoPuzzle(ESTADO_OBJETIVO),
+            )
+            exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados)
+        elif opcao == '2':
+            print(f"\n[Sistema] O algoritmo {opcao} ainda não foi implementado.")
         elif opcao == '0':
             break
         else:
