@@ -4,29 +4,21 @@ Funcoes utilitarias compartilhadas pelo projeto.
 
 def reconstruir_caminho(estado_final):
     """
-    Reconstrui o caminho da solucao a partir do estado final.
-
-    Considera que 'estado_final' e um objeto da classe No (Node),
-    que contem referencias para o 'pai', 'acao' e 'estado'.
+    Reconstrói o caminho da solução a partir do estado final.
     """
     caminho = []
     no_atual = estado_final
     
-    # Percorre os ponteiros de pai ate chegar ao no raiz (onde pai e None)
+    # Percorre os ponteiros usando o atributo 'anterior' da classe EstadoPuzzle
     while no_atual is not None:
-        # Extraimos os atributos com getattr para evitar erros caso os nomes mudem,
-        # mas idealmente seu objeto 'No' tera atributos diretos como no.acao e no.estado
-        acao = getattr(no_atual, 'acao', None)
-        estado = getattr(no_atual, 'estado', None)
-        
         caminho.append({
-            'acao': acao,
-            'estado': estado
+            'acao': no_atual.movimento,  # Pega a string de movimento ("Cima", "Baixo", etc)
+            'estado': no_atual           # Guarda o objeto inteiro para podermos usar o .formatar() depois
         })
         
-        no_atual = getattr(no_atual, 'pai', None)
+        no_atual = no_atual.anterior
         
-    # Inverte a lista para que a ordem seja do Inicio -> Objetivo
+    # Inverte a lista para que a ordem seja do Início -> Objetivo
     caminho.reverse()
     
     return caminho
