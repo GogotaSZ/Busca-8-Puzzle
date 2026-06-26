@@ -4,6 +4,10 @@ from algoritmos.busca_custo_uniforme import buscar as busca_custo_uniforme
 from algoritmos.busca_gulosa import buscar as busca_gulosa
 from estado_puzzle import EstadoPuzzle
 from algoritmos.busca_a_estrela import busca_a_estrela
+from algoritmos.busca_profundidade import buscar as busca_profundidade
+
+
+ESTADO_OBJETIVO = (1, 2, 3, 4, 5, 6, 7, 8, 0)
 
 def imprimir_matriz(estado):
     """Formata e imprime a lista de 9 posições como uma matriz 3x3."""
@@ -23,7 +27,7 @@ def exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados=None)
     cumprindo todos os requisitos de saída do PDF.
     """
     print("\n" + "="*40)
-    print("🏆 RESULTADOS DA BUSCA")
+    print("RESULTADOS DA BUSCA")
     print("="*40)
     
     if no_final is None:
@@ -43,7 +47,7 @@ def exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados=None)
             print(passo['estado'].formatar())
             print("-" * 20)
             
-        print("\n📊 MÉTRICAS DA EXECUÇÃO:")
+        print("\nMÉTRICAS DA EXECUÇÃO:")
         # A profundidade é exatamente o custo_g do último nó!
         print(f"- Profundidade da solução: {no_final.custo_g} movimentos")
         print(f"- Número de nós visitados: {nos_visitados}")
@@ -101,21 +105,31 @@ def menu_algoritmos(estado_inicial):
         
         if opcao == '1':
             menu_heuristicas(estado_inicial)
+        elif opcao == '3':
+            print("\n[Sistema] Iniciando execução da Busca em Profundidade...")
+            no_final, metricas = busca_profundidade(estado_inicial, ESTADO_OBJETIVO)
+            exibir_resultados(
+                no_final,
+                metricas['nos_visitados'],
+                metricas['tempo_execucao'],
+                metricas['nos_gerados'],
+            )
+            break
         elif opcao == '4':
             print("\n[Sistema] Iniciando Busca de Custo Uniforme...")
             no_final, nos_visitados, nos_gerados, tempo_execucao = busca_custo_uniforme(
                 EstadoPuzzle(estado_inicial),
-                EstadoPuzzle((1, 2, 3, 4, 5, 6, 7, 8, 0)),
+                EstadoPuzzle(ESTADO_OBJETIVO),
             )
             exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados)
         elif opcao == '5':
             print("\n[Sistema] Iniciando Busca Gulosa com Distancia de Manhattan...")
             no_final, nos_visitados, nos_gerados, tempo_execucao = busca_gulosa(
                 EstadoPuzzle(estado_inicial),
-                EstadoPuzzle((1, 2, 3, 4, 5, 6, 7, 8, 0)),
+                EstadoPuzzle(ESTADO_OBJETIVO),
             )
             exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados)
-        elif opcao in ['2', '3']:
+        elif opcao == '2':
             print(f"\n[Sistema] O algoritmo {opcao} ainda não foi implementado.")
         elif opcao == '0':
             break
@@ -159,7 +173,7 @@ def menu_principal():
     """Ponto de entrada do programa."""
     while True:
         print("\n" + "="*40)
-        print("🧩 SOLUCIONADOR 8-PUZZLE")
+        print("SOLUCIONADOR 8-PUZZLE")
         print("="*40)
         print("1. Carregar caso de teste")
         print("2. Inserir estado manualmente")
