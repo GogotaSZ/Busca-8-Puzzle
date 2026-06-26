@@ -3,8 +3,8 @@ Implementação do algoritmo de busca A* (A-Estrela).
 """
 
 import heapq
-from interface.sucessores import gerar_sucessores
-from interface.estado_puzzle import EstadoPuzzle
+from sucessores import gerar_sucessores
+from estado_puzzle import EstadoPuzzle
 from heuristicas.pecas_fora_lugar import calcular_pecas_fora_lugar
 from heuristicas.distancia_manhattan import calcular_manhattan
 from heuristicas.conflito_linear import calcular_conflito_linear
