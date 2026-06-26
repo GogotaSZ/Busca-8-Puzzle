@@ -1,5 +1,5 @@
 import os
-from utilitarios import verificar_solubilidade, ler_estado_de_texto
+from utilitarios import verificar_solubilidade, ler_estado_de_texto, reconstruir_caminho
 
 def imprimir_matriz(estado):
     """Formata e imprime a lista de 9 posições como uma matriz 3x3."""
@@ -10,6 +10,41 @@ def imprimir_matriz(estado):
         linha_formatada = [str(x) if x != 0 else "_" for x in linha]
         print("  " + "  ".join(linha_formatada))
     print() # Linha em branco para separar
+
+
+
+def exibir_resultados(no_final, nos_visitados, tempo_execucao):
+    """
+    Formata e exibe os resultados da execução do algoritmo, 
+    cumprindo todos os requisitos de saída do PDF.
+    """
+    print("\n" + "="*40)
+    print("🏆 RESULTADOS DA BUSCA")
+    print("="*40)
+    
+    if no_final is None:
+        print("Nenhuma solução foi encontrada para este estado.")
+    else:
+        caminho = reconstruir_caminho(no_final)
+        
+        print("Passo a passo da solução:\n")
+        
+        for i, passo in enumerate(caminho):
+            if passo['acao']:
+                print(f"Passo {i}: Mover espaço vazio para {passo['acao']}")
+            else:
+                print("Estado Inicial:")
+            
+            # Aqui chamamos aquele método formatar() lindão da classe EstadoPuzzle
+            print(passo['estado'].formatar())
+            print("-" * 20)
+            
+        print("\n📊 MÉTRICAS DA EXECUÇÃO:")
+        # A profundidade é exatamente o custo_g do último nó!
+        print(f"- Profundidade da solução: {no_final.custo_g} movimentos")
+        print(f"- Número de nós visitados: {nos_visitados}")
+        print(f"- Tempo de execução: {tempo_execucao:.5f} segundos")
+    print("="*40 + "\n")
 
 def carregar_casos_teste(nivel_dificuldade):
     """Lê os arquivos txt da pasta exemplos baseado na dificuldade escolhida."""
