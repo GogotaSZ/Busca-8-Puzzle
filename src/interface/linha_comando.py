@@ -1,13 +1,21 @@
-import os, time
+import os
 from utilitarios import verificar_solubilidade, ler_estado_de_texto, reconstruir_caminho
 from algoritmos.busca_custo_uniforme import buscar as busca_custo_uniforme
 from algoritmos.busca_gulosa import buscar as busca_gulosa
 from estado_puzzle import EstadoPuzzle
 from algoritmos.busca_a_estrela import busca_a_estrela
 from algoritmos.busca_profundidade import buscar as busca_profundidade
+from algoritmos.busca_largura import buscar as busca_largura
 
 
 ESTADO_OBJETIVO = (1, 2, 3, 4, 5, 6, 7, 8, 0)
+MARGEM_INFERIOR = 3
+
+
+def imprimir_margem_inferior():
+    """Adiciona respiro visual no fim dos blocos da interface."""
+    print("\n" * MARGEM_INFERIOR, end="")
+
 
 def imprimir_matriz(estado):
     """Formata e imprime a lista de 9 posições como uma matriz 3x3."""
@@ -54,7 +62,8 @@ def exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados=None)
         if nos_gerados is not None:
             print(f"- Número de nós gerados: {nos_gerados}")
         print(f"- Tempo de execução: {tempo_execucao:.5f} segundos")
-    print("="*40 + "\n")
+    print("="*40)
+    imprimir_margem_inferior()
 
 def carregar_casos_teste(nivel_dificuldade):
     """Lê os arquivos txt da pasta exemplos baseado na dificuldade escolhida."""
@@ -122,6 +131,7 @@ def menu_algoritmos(estado_inicial):
                 EstadoPuzzle(ESTADO_OBJETIVO),
             )
             exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados)
+            break
         elif opcao == '5':
             print("\n[Sistema] Iniciando Busca Gulosa com Distancia de Manhattan...")
             no_final, nos_visitados, nos_gerados, tempo_execucao = busca_gulosa(
@@ -129,8 +139,17 @@ def menu_algoritmos(estado_inicial):
                 EstadoPuzzle(ESTADO_OBJETIVO),
             )
             exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados)
+            break
         elif opcao == '2':
-            print(f"\n[Sistema] O algoritmo {opcao} ainda não foi implementado.")
+            print("\n[Sistema] Iniciando execução da Busca em Largura...")
+            no_final, metricas = busca_largura(estado_inicial, ESTADO_OBJETIVO)
+            exibir_resultados(
+                no_final,
+                metricas['nos_visitados'],
+                metricas['tempo_execucao'],
+                metricas['nos_gerados'],
+            )
+            break
         elif opcao == '0':
             break
         else:
@@ -151,18 +170,14 @@ def menu_heuristicas(estado_inicial):
         if opcao in ['1', '2', '3']:
             print(f"\n[Sistema] Iniciando A* com heurística {opcao}...")
             
-            # Marca o tempo inicial
-            inicio = time.time()
-            
             # Chama a nossa IA
-            no_final, nos_visitados = busca_a_estrela(estado_inicial, opcao)
-            
-            # Marca o tempo final
-            fim = time.time()
-            tempo_execucao = fim - inicio
+            no_final, nos_visitados, nos_gerados, tempo_execucao = busca_a_estrela(
+                estado_inicial,
+                opcao,
+            )
             
             # Exibe o relatório na tela!
-            exibir_resultados(no_final, nos_visitados, tempo_execucao)
+            exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados)
             break
         elif opcao == '0':
             break
@@ -183,6 +198,7 @@ def menu_principal():
         
         if opcao == '0':
             print("\nEncerrando o sistema...")
+            imprimir_margem_inferior()
             break
             
         estado_inicial = None
@@ -235,6 +251,7 @@ def menu_principal():
                 print("O programa detectou que este estado inicial não possui")
                 print("solução matemática (número ímpar de inversões).")
                 print("Por favor, tente outra configuração.")
+                imprimir_margem_inferior()
                 
 if __name__ == "__main__":
     menu_principal()
