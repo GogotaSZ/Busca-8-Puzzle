@@ -1,4 +1,4 @@
-# Material do relatório — Membro 3
+# Material do relatório — Bernardo Ladeira
 
 ## Modelagem do 8-Puzzle
 
