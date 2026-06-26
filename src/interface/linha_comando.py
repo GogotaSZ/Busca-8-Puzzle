@@ -1,5 +1,6 @@
-import os
+import os, time
 from utilitarios import verificar_solubilidade, ler_estado_de_texto, reconstruir_caminho
+from algoritmos.busca_a_estrela import busca_a_estrela
 
 def imprimir_matriz(estado):
     """Formata e imprime a lista de 9 posições como uma matriz 3x3."""
@@ -119,7 +120,20 @@ def menu_heuristicas(estado_inicial):
         
         if opcao in ['1', '2', '3']:
             print(f"\n[Sistema] Iniciando A* com heurística {opcao}...")
-            # Chamada futura: resultados = busca_a_estrela(estado_inicial, heuristica=opcao)
+            
+            # Marca o tempo inicial
+            inicio = time.time()
+            
+            # Chama a nossa IA
+            no_final, nos_visitados = busca_a_estrela(estado_inicial, opcao)
+            
+            # Marca o tempo final
+            fim = time.time()
+            tempo_execucao = fim - inicio
+            
+            # Exibe o relatório na tela!
+            exibir_resultados(no_final, nos_visitados, tempo_execucao)
+            break
         elif opcao == '0':
             break
         else:
