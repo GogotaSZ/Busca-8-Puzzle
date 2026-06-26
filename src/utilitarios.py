@@ -6,8 +6,8 @@ def reconstruir_caminho(estado_final):
     """
     Reconstrui o caminho da solucao a partir do estado final.
 
-    Considera que 'estado_final' e um objeto da classe No (Node),
-    que contem referencias para o 'pai', 'acao' e 'estado'.
+    Aceita tanto a representacao antiga (``pai``, ``acao`` e ``estado``)
+    quanto ``EstadoPuzzle`` (``anterior``, ``movimento`` e o proprio no).
     """
     caminho = []
     no_atual = estado_final
@@ -16,15 +16,15 @@ def reconstruir_caminho(estado_final):
     while no_atual is not None:
         # Extraimos os atributos com getattr para evitar erros caso os nomes mudem,
         # mas idealmente seu objeto 'No' tera atributos diretos como no.acao e no.estado
-        acao = getattr(no_atual, 'acao', None)
-        estado = getattr(no_atual, 'estado', None)
+        acao = getattr(no_atual, 'movimento', getattr(no_atual, 'acao', None))
+        estado = getattr(no_atual, 'estado', no_atual)
         
         caminho.append({
             'acao': acao,
             'estado': estado
         })
         
-        no_atual = getattr(no_atual, 'pai', None)
+        no_atual = getattr(no_atual, 'anterior', getattr(no_atual, 'pai', None))
         
     # Inverte a lista para que a ordem seja do Inicio -> Objetivo
     caminho.reverse()
