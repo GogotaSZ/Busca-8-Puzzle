@@ -60,3 +60,22 @@ def gerar_sucessores(estado_atual):
 
     return sucessores
 
+"""
+
+    # Bloco de teste rápido (pode apagar depois de testar)
+if __name__ == "__main__":
+    print("Testando o motor do jogo...")
+    # Um estado com o espaço vazio (0) bem no meio do tabuleiro
+    estado_teste = EstadoPuzzle([1, 2, 3, 4, 0, 5, 6, 7, 8])
+    
+    print("\nEstado Atual:")
+    print(estado_teste.formatar())
+    
+    filhos = gerar_sucessores(estado_teste)
+    print(f"\nForam gerados {len(filhos)} sucessores válidos:\n")
+    
+    for filho in filhos:
+        print(f"Ação: {filho.movimento} | Custo G: {filho.custo_g}")
+        print(filho.formatar())
+        print("-" * 15)
+"""
