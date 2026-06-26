@@ -1,6 +1,10 @@
 import os, time
 from utilitarios import verificar_solubilidade, ler_estado_de_texto, reconstruir_caminho
 from algoritmos.busca_a_estrela import busca_a_estrela
+from algoritmos.busca_profundidade import buscar as busca_profundidade
+
+
+ESTADO_OBJETIVO = (1, 2, 3, 4, 5, 6, 7, 8, 0)
 
 def imprimir_matriz(estado):
     """Formata e imprime a lista de 9 posições como uma matriz 3x3."""
@@ -14,13 +18,13 @@ def imprimir_matriz(estado):
 
 
 
-def exibir_resultados(no_final, nos_visitados, tempo_execucao):
+def exibir_resultados(no_final, nos_visitados, tempo_execucao, nos_gerados=None):
     """
     Formata e exibe os resultados da execução do algoritmo, 
     cumprindo todos os requisitos de saída do PDF.
     """
     print("\n" + "="*40)
-    print("🏆 RESULTADOS DA BUSCA")
+    print("RESULTADOS DA BUSCA")
     print("="*40)
     
     if no_final is None:
@@ -40,10 +44,12 @@ def exibir_resultados(no_final, nos_visitados, tempo_execucao):
             print(passo['estado'].formatar())
             print("-" * 20)
             
-        print("\n📊 MÉTRICAS DA EXECUÇÃO:")
+        print("\nMÉTRICAS DA EXECUÇÃO:")
         # A profundidade é exatamente o custo_g do último nó!
         print(f"- Profundidade da solução: {no_final.custo_g} movimentos")
         print(f"- Número de nós visitados: {nos_visitados}")
+        if nos_gerados is not None:
+            print(f"- Número de nós gerados: {nos_gerados}")
         print(f"- Tempo de execução: {tempo_execucao:.5f} segundos")
     print("="*40 + "\n")
 
@@ -96,7 +102,17 @@ def menu_algoritmos(estado_inicial):
         
         if opcao == '1':
             menu_heuristicas(estado_inicial)
-        elif opcao in ['2', '3', '4', '5']:
+        elif opcao == '3':
+            print("\n[Sistema] Iniciando execução da Busca em Profundidade...")
+            no_final, metricas = busca_profundidade(estado_inicial, ESTADO_OBJETIVO)
+            exibir_resultados(
+                no_final,
+                metricas['nos_visitados'],
+                metricas['tempo_execucao'],
+                metricas['nos_gerados'],
+            )
+            break
+        elif opcao in ['2', '4', '5']:
             print(f"\n[Sistema] Iniciando execução do algoritmo {opcao}...")
             # Aqui no futuro vamos chamar a função correspondente da pasta src/algoritmos/
             # Ex: resultados = busca_largura(estado_inicial)
@@ -143,7 +159,7 @@ def menu_principal():
     """Ponto de entrada do programa."""
     while True:
         print("\n" + "="*40)
-        print("🧩 SOLUCIONADOR 8-PUZZLE")
+        print("SOLUCIONADOR 8-PUZZLE")
         print("="*40)
         print("1. Carregar caso de teste")
         print("2. Inserir estado manualmente")
@@ -206,8 +222,5 @@ def menu_principal():
                 print("solução matemática (número ímpar de inversões).")
                 print("Por favor, tente outra configuração.")
                 
-        if estado_inicial:
-            menu_algoritmos(estado_inicial)
-
 if __name__ == "__main__":
     menu_principal()
